@@ -62,7 +62,7 @@ prefix = sys.argv[1]
 threshold = 1.0e-3
 
 fitslist = sorted(glob.glob(prefix+'*00*pbcor.fits'))
-freqlist = sorted(glob.glob(prefix+'*00*pbcor.fits'))[:-1]
+#freqlist = sorted(glob.glob(prefix+'*00*pbcor.fits'))[:-1]
 
 alphafits = prefix+'_alpha_'+str(threshold).replace('.','p')+'.fits'
 alphaerrorfits = prefix+'_alphaerror_'+str(threshold).replace('.','p')+'.fits'
@@ -75,7 +75,7 @@ os.system('cp '+fitslist[0]+' '+alphaerrorfits)
 os.system('cp '+fitslist[0]+' '+f0fits)
 os.system('cp '+fitslist[0]+' '+nfluxfits)
 
-freqs = getfreqs(freqlist)
+freqs = getfreqs(fitslist)
 logf = numpy.log10(freqs)
 
 print(freqs)

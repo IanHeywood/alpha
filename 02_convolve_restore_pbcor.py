@@ -184,7 +184,7 @@ for residual_fits in residuals:
     fix_beam_header(restored_fits,target_bmaj,target_bmin,target_bpa)
 
     print('   /   | Applying primary beam correction')
-    pbcor_image = pbcor(pbdir,restored_image)
+    pbcor_image = pbcor(pbdir,restored_fits)
     print(' ----> | Creating primary beam corrected image')
     copyfile(restored_fits,pbcor_fits)
     flush_fits(pbcor_image,pbcor_fits)

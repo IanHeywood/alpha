@@ -14,14 +14,14 @@ def fitfunc(x, A, B):
 
 
 def getfreqs(fitslist):
-	freqs = []
-	for fitsfile in fitslist:
-		hdu = fits.open(fitsfile)
-		hdr = hdu[0].header
-		freq = hdr['CRVAL3']
-		freqs.append(freq)
-	freqs = numpy.array(freqs)
-	return freqs
+    freqs = []
+    for fitsfile in fitslist:
+        hdu = fits.open(fitsfile)
+        hdr = hdu[0].header
+        freq = hdr['CRVAL3']
+        freqs.append(freq)
+    freqs = numpy.array(freqs)
+    return freqs
 
 
 def getImage(fitsfile):
@@ -36,26 +36,26 @@ def getImage(fitsfile):
 
 
 def flushFits(newimage,fitsfile):
-	# Write numpy array newimage to fitsfile
-	# Dimensions must match (obv)
-	f = fits.open(fitsfile,mode='update')
-	input_hdu = f[0]
-	if len(input_hdu.data.shape) == 2:
-		input_hdu.data[:,:] = newimage
-	elif len(input_hdu.data.shape) == 3:
-		input_hdu.data[0,:,:] = newimage
-	else:
-		input_hdu.data[0,0,:,:] = newimage
-	f.flush()
+    # Write numpy array newimage to fitsfile
+    # Dimensions must match (obv)
+    f = fits.open(fitsfile,mode='update')
+    input_hdu = f[0]
+    if len(input_hdu.data.shape) == 2:
+        input_hdu.data[:,:] = newimage
+    elif len(input_hdu.data.shape) == 3:
+        input_hdu.data[0,:,:] = newimage
+    else:
+        input_hdu.data[0,0,:,:] = newimage
+    f.flush()
 
 
 def makecube(fitslist):
-	temp = []
-	for fitsfile in fitslist:
-		img = getImage(fitsfile)
-		temp.append(img)
-	cube = numpy.dstack(temp)
-	return cube
+    temp = []
+    for fitsfile in fitslist:
+        img = getImage(fitsfile)
+        temp.append(img)
+    cube = numpy.dstack(temp)
+    return cube
 
 
 prefix = sys.argv[1]
@@ -107,27 +107,27 @@ count = 0
 pcount = 0
 
 for i,j in idx:
-	if count == 0:
-		print(str(pcount)+'%...')
-	spec = numpy.array(cube[i,j,:])
-	if numpy.isnan(spec.sum()):
-		specmask = ~numpy.isnan(spec)
-	else:
-		specmask = [True]*len(freqs)
-	num_points = len(spec[specmask])
-	f0 = numpy.mean(freqs[specmask])
-	logspec = numpy.log10(spec[specmask])
-	popt,pcov = curve_fit(fitfunc,logf[specmask],logspec)
-	A = popt[0]
-        alpha_err = numpy.sqrt(numpy.diag(pcov))[0]
-	alphaimage[i,j] = A
-	alphaerrorimage[i,j] = alpha_err
-	f0image[i,j] = f0
-	nfluximage[i,j] = num_points
-	count+=1
-	if count == tenpc:
-		count = 0
-		pcount += 10
+    if count == 0:
+        print(str(pcount)+'%...')
+    spec = numpy.array(cube[i,j,:])
+    if numpy.isnan(spec.sum()):
+        specmask = ~numpy.isnan(spec)
+    else:
+        specmask = [True]*len(freqs)
+    num_points = len(spec[specmask])
+    f0 = numpy.mean(freqs[specmask])
+    logspec = numpy.log10(spec[specmask])
+    popt,pcov = curve_fit(fitfunc,logf[specmask],logspec)
+    A = popt[0]
+    alpha_err = numpy.sqrt(numpy.diag(pcov))[0]
+    alphaimage[i,j] = A
+    alphaerrorimage[i,j] = alpha_err
+    f0image[i,j] = f0
+    nfluximage[i,j] = num_points
+    count+=1
+    if count == tenpc:
+        count = 0
+        pcount += 10
 
 
 flushFits(alphaimage,alphafits)

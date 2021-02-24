@@ -78,8 +78,8 @@ os.system('cp '+fitslist[0]+' '+nfluxfits)
 freqs = getfreqs(freqlist)
 logf = numpy.log10(freqs)
 
-print freqs
-print logf
+print(freqs)
+print(logf)
 
 cube = makecube(fitslist)
 mask = cube > threshold
@@ -119,7 +119,7 @@ for i,j in idx:
 	logspec = numpy.log10(spec[specmask])
 	popt,pcov = curve_fit(fitfunc,logf[specmask],logspec)
 	A = popt[0]
-    alpha_err = numpy.sqrt(numpy.diag(pcov))[0]
+        alpha_err = numpy.sqrt(numpy.diag(pcov))[0]
 	alphaimage[i,j] = A
 	alphaerrorimage[i,j] = alpha_err
 	f0image[i,j] = f0

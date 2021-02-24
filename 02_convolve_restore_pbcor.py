@@ -98,7 +98,7 @@ def fix_beam_header(fitsfile,bmaj,bmin,bpa):
 def pbcor(pbdir,infits,threshold=0.3):
     idx = infits.index('-00')
     chan = infits[idx+1:idx+4]
-    pb_fits = glob.glob(pbdir.rstrip('/')+'/*'+chan'*fits')[0]
+    pb_fits = glob.glob(pbdir.rstrip('/')+'/*'+chan+'*fits')[0]
     pb_image = get_image(pb_fits)
     mask = pb_image < threshold
     pb_image[mask] = numpy.nan
